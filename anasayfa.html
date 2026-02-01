@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ana Sayfa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="center">
+
+    <h1>💖 Bizim Hikayemiz 💖</h1>
+
+    <!-- SÜRE SAYACI -->
+    <div class="kutu">
+        <h2>Tanışalı Ne Kadar Oldu?</h2>
+        <p id="sure">hesaplanıyor...</p>
+    </div>
+
+    <!-- FOTOĞRAFLAR -->
+    <div class="kutu">
+        <h2>📸 Anılarımız</h2>
+        <div class="fotolar">
+            <div class="foto">Foto 1</div>
+            <div class="foto">Foto 2</div>
+            <div class="foto">Foto 3</div>
+        </div>
+        <p style="font-size:14px;">(Fotoğrafları sonra ekleyeceğiz)</p>
+    </div>
+
+    <!-- GÜNLÜK MESAJ -->
+    <div class="kutu">
+        <h2>📝 Bugünün Mesajı</h2>
+        <textarea id="gunluk" placeholder="Bugün içimden geçenler..."></textarea>
+        <button onclick="mesajKaydet()">Kaydet 💾</button>
+    </div>
+
+    <!-- BONUS -->
+    <div class="kutu">
+        <h2>✨ Bugünün Sözü</h2>
+        <p id="soz"></p>
+    </div>
+
+    <button onclick="window.location.href='gunler.html'">
+        Günlere Git →
+    </button>
+
+    <script>
+        /* 🔹 TANISMA TARIHI (BURAYI DEGISTIR) */
+        const tanismaTarihi = new Date("2023-06-15T21:00:00");
+
+        function sureHesapla() {
+            const simdi = new Date();
+            let fark = simdi - tanismaTarihi;
+
+            const saniye = Math.floor(fark / 1000) % 60;
+            const dakika = Math.floor(fark / (1000 * 60)) % 60;
+            const saat = Math.floor(fark / (1000 * 60 * 60)) % 24;
+            const gun = Math.floor(fark / (1000 * 60 * 60 * 24));
+            const yil = Math.floor(gun / 365);
+
+            document.getElementById("sure").innerText =
+                `${yil} yıl, ${gun} gün, ${saat} saat, ${dakika} dakika, ${saniye} saniye`;
+        }
+
+        setInterval(sureHesapla, 1000);
+        sureHesapla();
+
+        /* 🔹 GÜNLÜK MESAJ */
+        const gunluk = document.getElementById("gunluk");
+        gunluk.value = localStorage.getItem("gunlukMesaj") || "";
+
+        function mesajKaydet() {
+            localStorage.setItem("gunlukMesaj", gunluk.value);
+            alert("Mesaj kaydedildi ❤️");
+        }
+
+        /* 🔹 GÜNÜN SÖZÜ */
+        const sozler = [
+            "İyi ki varsın.",
+            "Sen benim en güzel tesadüfümsün.",
+            "Beraberken dünya daha güzel.",
+            "Gülüşün en sevdiğim şey."
+        ];
+
+        document.getElementById("soz").innerText =
+            sozler[Math.floor(Math.random() * sozler.length)];
+    </script>
+
+</body>
+</html>

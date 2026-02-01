@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bizim Hikâyemiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>❤️ Bizim Hikâyemiz ❤️</h1>
+
+<p class="subtitle">31 Aralık 2022’ten beri geçen zaman</p>
+
+<!-- SAYAÇ -->
+<div class="counter">
+    <div class="time-box">
+        <span id="years">0</span>
+        <small>Yıl</small>
+    </div>
+    <div class="time-box">
+        <span id="days">0</span>
+        <small>Gün</small>
+    </div>
+    <div class="time-box">
+        <span id="hours">0</span>
+        <small>Saat</small>
+    </div>
+    <div class="time-box">
+        <span id="minutes">0</span>
+        <small>Dakika</small>
+    </div>
+    <div class="time-box">
+        <span id="seconds">0</span>
+        <small>Saniye</small>
+    </div>
+</div>
+
+<!-- FOTOĞRAF ALANI -->
+<h2>📸 Bizden Anılar</h2>
+
+
+
+<div class="photo-slider" id="photoSlider">
+    <button id="prevBtn">&lt;</button>
+    <div class="photo-container">
+        <img id="sliderImage" src="images/foto1.jpg" alt="Fotoğraf 1">
+    </div>
+    <button id="nextBtn">&gt;</button>
+</div>
+
+
+<style>
+.photo-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.photo-container {
+    width: 300px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.7s ease;
+    opacity: 1;
+}
+
+#prevBtn, #nextBtn {
+    padding: 10px 15px;
+    font-size: 18px;
+    border: none;
+    background: #c2185b;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    background: #a3154d;
+    transform: scale(1.1);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const photos = [];
+    for (let i = 1; i <= 10; i++) {
+        photos.push(`images/foto${i}.jpg`);
+    }
+
+    let currentIndex = 0;
+    const sliderImage = document.getElementById("sliderImage");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    let autoSlide;
+
+    function showPhoto(index) {
+        sliderImage.style.opacity = 0;
+        setTimeout(() => {
+            sliderImage.src = photos[index];
+            sliderImage.style.opacity = 1;
+        }, 200);
+    }
+
+    function nextPhoto() {
+        currentIndex = (currentIndex + 1) % photos.length;
+        showPhoto(currentIndex);
+    }
+
+    function prevPhoto() {
+        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+        showPhoto(currentIndex);
+    }
+
+    prevBtn.addEventListener("click", () => {
+        prevPhoto();
+        resetAutoSlide();
+    });
+
+    nextBtn.addEventListener("click", () => {
+        nextPhoto();
+        resetAutoSlide();
+    });
+
+    function startAutoSlide() {
+        autoSlide = setInterval(nextPhoto, 3000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlide);
+        startAutoSlide();
+    }
+
+    showPhoto(currentIndex);
+    startAutoSlide();
+});
+</script>
+
+
+
+
+
+
+<!-- 💌 BUGÜNÜN MESAJI -->
+<h2>💌 Bugünün Mesajı</h2>
+<textarea id="dailyMessageInput" placeholder="Bugün ne söylemek istersin?"></textarea>
+<br><br>
+<button id="dailyMessageBtn">Kaydet</button>
+<div class="message" id="dailyMessageBox"></div>
+
+<!-- GÜNLER BUTONLARI -->
+<div class="day-buttons">
+    <a href="gun1.html">Gün 1</a>
+    <a href="gun2.html">Gün 2</a>
+    <a href="gun3.html">Gün 3</a>
+</div>
+
+<script>
+/* ===============================
+   1️⃣ SAYAC
+   =============================== */
+const startDate = new Date("2022-12-31T11:39:00");
+function updateCounter() {
+    const now = new Date();
+    let diff = Math.floor((now - startDate) / 1000);
+
+    const years = Math.floor(diff / (365*24*60*60));
+    diff -= years*365*24*60*60;
+
+    const days = Math.floor(diff / (24*60*60));
+    diff -= days*24*60*60;
+
+    const hours = Math.floor(diff / (60*60));
+    diff -= hours*60*60;
+
+    const minutes = Math.floor(diff / 60);
+    const seconds = diff % 60;
+
+    document.getElementById("years").textContent = years;
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = hours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
+}
+setInterval(updateCounter, 1000);
+updateCounter();
+
+/* ===============================
+   2️⃣ GÜNLÜK MESAJ
+   =============================== */
+document.addEventListener("DOMContentLoaded", () => {
+
+    const input = document.getElementById("dailyMessageInput");
+    const button = document.getElementById("dailyMessageBtn");
+    const box = document.getElementById("dailyMessageBox");
+
+    // Sayfa açılınca mesajı yükle
+    const savedMessage = localStorage.getItem("dailyMessage");
+    const savedTime = localStorage.getItem("dailyMessageTime");
+
+    if (savedMessage && savedTime) {
+        const now = Date.now();
+        const diff = now - Number(savedTime);
+
+        if (diff < 24*60*60*1000) {
+            box.textContent = savedMessage;
+        } else {
+            localStorage.removeItem("dailyMessage");
+            localStorage.removeItem("dailyMessageTime");
+        }
+    }
+
+    // Kaydet butonu
+    button.addEventListener("click", () => {
+        const text = input.value.trim();
+        if (text === "") return;
+
+        localStorage.setItem("dailyMessage", text);
+        localStorage.setItem("dailyMessageTime", Date.now());
+
+        box.textContent = text;
+        input.value = "";
+    });
+
+});
+</script>
+
+</body>
+</html>
+<!-- Playlist Müzik -->
+<audio id="bgMusic" src="music1.mp3"></audio>
+
+<!-- Müzik Butonu -->
+<div class="music-toggle" onclick="togglePlaylist()">🎵</div>
+
+<!-- Playlist -->
+<div class="playlist" id="playlist">
+    <div class="song" onclick="playSong(0)">Bizim Şarkımız</div>
+    <div class="song" onclick="playSong(1)">Birlikte Dinlediğimiz</div>
+    <div class="song" onclick="playSong(2)">Müziği Kapat</div>
+</div>
+
+<script>
+const songs = [
+    { src: "music1.mp3", name: "Bizim Şarkımız" },
+    { src: "music2.mp3", name: "Birlikte Dinlediğimiz" },
+    { src: "music3.mp3", name: "Müziği Kapat" }
+];
+
+const music = document.getElementById("bgMusic");
+const playlist = document.getElementById("playlist");
+const songElements = document.querySelectorAll(".song");
+
+let currentSong = parseInt(localStorage.getItem("songIndex")) || 0;
+let isPlaying = localStorage.getItem("musicPlaying") === "true";
+
+function togglePlaylist() {
+    playlist.classList.toggle("open");
+}
+
+function playSong(index) {
+    currentSong = index;
+    if (index === 2) {
+        music.pause();
+        isPlaying = false;
+        localStorage.setItem("musicPlaying", "false");
+    } else {
+        music.src = songs[index].src;
+        music.play();
+        isPlaying = true;
+        localStorage.setItem("musicPlaying", "true");
+    }
+
+    localStorage.setItem("songIndex", index);
+    highlightSong();
+}
+
+function highlightSong() {
+    songElements.forEach((el, i) => {
+        el.classList.toggle("active", i === currentSong);
+    });
+}
+
+// Sayfa açılır açılmaz çalması veya durması
+if (songs[currentSong] && currentSong !== 2) {
+    music.src = songs[currentSong].src;
+    highlightSong();
+    if (isPlaying) music.play();
+}
+</script>
